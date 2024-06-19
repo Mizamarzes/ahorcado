@@ -5,125 +5,134 @@ import java.util.Collections;
 import java.util.Scanner;
 
 public class Main {
-    public static void main(String[] args) throws Exception{
-        
-        // Welcome
+    public static void main(String[] args) {
+        // Welcome message
+        System.out.println("");
         System.out.println("***************************");
         System.out.println("");
         System.out.println("Welcome to Hangman!");
-        System.out.println("Press any letter for start");
+        System.out.println("Press any letter to start");
         System.out.println("");
         System.out.println("***************************");
+        System.out.println("");
 
-        // input of the user
+        // Input of the user
         Scanner input = new Scanner(System.in);
 
-        // Create a ArrayList with name wordsList
+        // Create an ArrayList with name wordsList
         ArrayList<String> wordsList = new ArrayList<>();
 
-        // Add the items to ArrayList
+        // Add items to ArrayList
         Collections.addAll(wordsList, "banano", "manzana", "uva", "fresa", 
         "sandia", "durazno", "pera", "mandarina", "naranja", "guanabana");
 
         // Select a random word from wordsList
-        String hidden_text = wordsList.get((int)(Math.random() * wordsList.size()));
-        char[] textArray = hidden_text.toCharArray();
+        String hiddenText = wordsList.get((int) (Math.random() * wordsList.size()));
+        char[] textArray = hiddenText.toCharArray();
 
         char[] myAnswers = new char[textArray.length];
 
-        for(int i = 0; i < textArray.length; i++){
-            myAnswers[i] = '?';
+        for (int i = 0; i < textArray.length; i++) {
+            myAnswers[i] = '_';
         }
 
         boolean finished = false;
-        int lives = 6;
+        int lives = 3;
 
-        while (finished == false) {
-            String letter = input.next();
+        while (!finished) {
+            System.out.print("Enter a letter: ");
+            String letter = input.next().toLowerCase();
+
             // Checks for valid input
-
             while (letter.length() != 1 || Character.isDigit(letter.charAt(0))) {
                 System.out.println("Error input - Try Again");
-                letter = input.next();
+                letter = input.next().toLowerCase();
             }
 
-            // check if letter is in the word
+            // Check if letter is in the word
             boolean found = false;
-            for(int i = 0; i < textArray.length; i++){
-                if(letter.charAt(0) == textArray[i]) {
+            for (int i = 0; i < textArray.length; i++) {
+                if (letter.charAt(0) == textArray[i]) {
                     myAnswers[i] = textArray[i];
                     found = true;
                 }
             }
-            
-            if(!found){
+
+            if (!found) {
                 lives--;
-                System.out.println("WRONG LETTER");
+                System.out.println("");
+                System.out.println("------- WRONG LETTER -------");
+                System.out.println("");
             }
 
-            boolean done = true;
-            for(int i = 0; i < myAnswers.length; i++){
-                if(myAnswers[i] == '?'){
-                    System.out.println(" _");   
-                    done = false;
-                }else{
-                    System.out.println(" " + myAnswers[i]);
-                }
+            // Display current progress
+            for (int i = 0; i < myAnswers.length; i++) {
+                System.out.print(" " + myAnswers[i]);
             }
-
-            System.out.println("\n" + "Lives left: " + lives);
+            System.out.println("\nLives left: " + lives);
             drawHangman(lives);
 
-            // check if the game ends
-            if(done){
-                System.out.println("Congrats You Found the Word");
+            // Check if the game ends
+            if (new String(myAnswers).equals(hiddenText)) {
+                System.out.println("Congrats! You found the word: " + hiddenText);
                 finished = true;
             }
 
-            if(lives <= 0){
-                System.out.println("You are dead!");
+            if (lives <= 0) {
+                System.out.println("You are dead! The word was: " + hiddenText);
                 finished = true;
             }
         }
+
+        input.close();
     }
 
-    public static void drawHangman(int l) {
-        if(l == 3) {
-            System.out.println("|----------");
-            System.out.println("|");
-            System.out.println("|");
-            System.out.println("|");
-            System.out.println("|");
-            System.out.println("|");
-            System.out.println("|");
+    public static void drawHangman(int lives) {
+        switch (lives) {
+            case 3:
+                System.out.println("");
+                System.out.println("|----------");
+                System.out.println("|");
+                System.out.println("|");
+                System.out.println("|");
+                System.out.println("|");
+                System.out.println("|");
+                System.out.println("|");
+                System.out.println("");
+                break;
+            case 2:
+                System.out.println("");
+                System.out.println("|----------");
+                System.out.println("|    O");
+                System.out.println("|   -|");
+                System.out.println("|");
+                System.out.println("|");
+                System.out.println("|");
+                System.out.println("|");
+                System.out.println("");
+                break;
+            case 1:
+                System.out.println("");
+                System.out.println("|----------");
+                System.out.println("|    O");
+                System.out.println("|   -|-");
+                System.out.println("|    |");
+                System.out.println("|");
+                System.out.println("|");
+                System.out.println("|");
+                System.out.println("");
+                break;
+            default:
+                System.out.println("");
+                System.out.println("|----------");
+                System.out.println("|    O");
+                System.out.println("|   -|-");
+                System.out.println("|    |");
+                System.out.println("|   / \\");
+                System.out.println("|");
+                System.out.println("|");
+                System.out.println("");
+                break;
         }
-        else if(l == 2) {
-            System.out.println("|----------");
-            System.out.println("|    O");
-            System.out.println("|   -|");
-            System.out.println("|");
-            System.out.println("|");
-            System.out.println("|");
-            System.out.println("|");
-        }
-        else if(l == 1){
-            
-            System.out.println("|----------");
-            System.out.println("|    O");
-            System.out.println("|   -|-");
-            System.out.println("|    |");
-            System.out.println("|");
-            System.out.println("|");
-            System.out.println("|");
-        }
-        else{
-            System.out.println("|----------");
-            System.out.println("|    O");
-            System.out.println("|   -|-");
-            System.out.println("|    |");
-            System.out.println("|   /l");
-            System.out.println("|");
-            System.out.println("|");
-        }
-    }    
+    }
 }
